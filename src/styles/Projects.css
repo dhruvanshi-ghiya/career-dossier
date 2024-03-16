@@ -1,0 +1,73 @@
+.projects {
+    padding: 40px 20px;
+  }
+  
+  .projects h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .project-item {
+    background-color: #f5f5f5;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+  
+  .project-item h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .project-item p {
+    margin-bottom: 10px;
+  }
+  
+  .tech-list {
+    margin-bottom: 10px;
+  }
+  
+  .tech-list h4 {
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+  }
+  
+  .tech-list ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .tech-list ul li {
+    background-color: #333;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 3px;
+    margin-right: 10px;
+    margin-bottom: 5px;
+  }
+  
+  .achievements h4 {
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+  }
+  
+  .achievements ul {
+    list-style-type: none;
+    padding-left: 20px;
+  }
+  
+  .achievements ul li {
+    position: relative;
+    margin-bottom: 5px;
+  }
+  
+  .achievements ul li::before {
+    content: "\2022";
+    position: absolute;
+    left: -15px;
+    color: #f1c40f;
+  }
