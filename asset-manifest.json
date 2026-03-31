@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/career-dossier/static/css/main.e095ee17.css",
+    "main.js": "/career-dossier/static/js/main.a39cca22.js",
+    "static/js/453.18636203.chunk.js": "/career-dossier/static/js/453.18636203.chunk.js",
+    "index.html": "/career-dossier/index.html",
+    "main.e095ee17.css.map": "/career-dossier/static/css/main.e095ee17.css.map",
+    "main.a39cca22.js.map": "/career-dossier/static/js/main.a39cca22.js.map",
+    "453.18636203.chunk.js.map": "/career-dossier/static/js/453.18636203.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e095ee17.css",
+    "static/js/main.a39cca22.js"
+  ]
+}
