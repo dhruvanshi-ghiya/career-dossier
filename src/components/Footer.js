@@ -1,18 +1,19 @@
 import React from 'react';
-import '../styles/Footer.css';
+import { motion } from 'framer-motion';
 
 const Footer = () => {
   return (
-    <footer>
-      <p>&copy; {new Date().getFullYear()} Dhruvanshi Ghiya. All rights reserved.</p>
-      <div>
-        <a href="https://www.linkedin.com/in/dhruvanshi-ghiya/" target="_blank" rel="noopener noreferrer">
-          LinkedIn
-        </a>
-        <a href="https://github.com/Dhruvanshi-ghiya" target="_blank" rel="noopener noreferrer">
-          GitHub
-        </a>
-      </div>
+    <footer className="footer">
+      <motion.div
+        className="footer-content"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+      >
+        <p>Designed & Built by <span className="footer-name">Dhruvanshi Ghiya</span></p>
+        <p className="footer-year">&copy; {new Date().getFullYear()}</p>
+      </motion.div>
     </footer>
   );
 };

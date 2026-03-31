@@ -1,23 +1,29 @@
 import React from 'react';
-import Header from './components/Header';
+import ParticleCanvas from './components/ParticleCanvas';
+import CustomCursor from './components/CustomCursor';
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
 import About from './components/About';
 import Skills from './components/Skills';
 import Projects from './components/Projects';
-import Education from './components/Education';
 import Experience from './components/Experience';
+import Education from './components/Education';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
-import './App.css'; // Import the App.css file for styling
+import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <Header />
+      <CustomCursor />
+      <ParticleCanvas />
+      <Navbar />
+      <Hero />
       <About />
       <Skills />
       <Projects />
-      <Education />
       <Experience />
+      <Education />
       <Contact />
       <Footer />
     </div>
