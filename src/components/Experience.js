@@ -1,97 +1,112 @@
-import React, { useRef } from 'react';
-import { motion, useInView, useScroll, useTransform } from 'framer-motion';
+import React, { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const experiences = [
   {
     company: 'SMART Center',
     location: 'Waterloo, ON',
     role: 'Software Developer',
-    duration: 'Sep 2023 - Dec 2023',
-    highlights: [
-      '30% increase in overall efficiency',
-      '40% faster onboarding with documentation',
-      '15% improvement in software performance',
-    ],
+    duration: 'Sep 2023 — Dec 2023',
+    highlights: ['30% efficiency boost', '40% faster onboarding', '15% performance gain'],
   },
   {
     company: 'ThinkLP',
     location: 'Waterloo, ON',
     role: 'Software Developer / QA Specialist',
-    duration: 'May 2022 - Aug 2023',
-    highlights: [
-      '20% decline in software bugs',
-      '15% decrease in user support requests',
-      '30% increase in code quality',
-    ],
+    duration: 'May 2022 — Aug 2023',
+    highlights: ['20% fewer bugs', '15% less support requests', '30% code quality up'],
   },
   {
     company: 'ICAN Infotech',
     location: 'Ahmedabad, India',
     role: 'Technical Content Writer',
-    duration: 'Oct 2020 - Feb 2021',
-    highlights: [
-      '20% increase in user satisfaction',
-      '15% product performance improvement',
-    ],
+    duration: 'Oct 2020 — Feb 2021',
+    highlights: ['20% user satisfaction', '15% performance improvement'],
   },
   {
     company: 'Royal Technosoft',
     location: 'Ahmedabad, India',
     role: 'Summer Intern',
-    duration: 'Apr 2020 - Jun 2020',
-    highlights: [
-      '90% technical issues resolved',
-    ],
+    duration: 'Apr 2020 — Jun 2020',
+    highlights: ['90% issues resolved'],
   },
 ];
 
 const Experience = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-100px' });
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start end', 'end start'],
-  });
-  const lineHeight = useTransform(scrollYProgress, [0, 0.8], ['0%', '100%']);
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      /* Header */
+      gsap.fromTo('.experience-section .section-header',
+        { opacity: 0, y: 60 },
+        {
+          opacity: 1, y: 0, duration: 1, ease: 'power3.out',
+          scrollTrigger: { trigger: '.experience-section .section-header', start: 'top 82%' },
+        }
+      );
+
+      /* Timeline fills as you scroll */
+      gsap.fromTo('.flight-path-progress',
+        { scaleY: 0 },
+        {
+          scaleY: 1, ease: 'none',
+          scrollTrigger: { trigger: '.flight-path', start: 'top 70%', end: 'bottom 30%', scrub: 0.3 },
+        }
+      );
+
+      /* Waypoints slide in */
+      gsap.utils.toArray('.waypoint').forEach((item) => {
+        gsap.fromTo(item,
+          { opacity: 0, y: 60 },
+          {
+            opacity: 1, y: 0, duration: 1, ease: 'power3.out',
+            scrollTrigger: { trigger: item, start: 'top 84%' },
+          }
+        );
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <section id="experience" className="experience" ref={ref}>
-      <motion.div
-        className="section-header"
-        initial={{ opacity: 0, y: 50 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.8 }}
-      >
-        <span className="section-number">04</span>
-        <h2>Experience</h2>
-        <div className="header-line" />
-      </motion.div>
+    <section id="experience" className="experience-section" ref={sectionRef}>
+      <div className="section-header">
+        <span className="section-number">{'// 04 — FLIGHT PATH'}</span>
+        <h2>Journey Log</h2>
+        <div className="header-accent-line" />
+      </div>
 
-      <div className="timeline">
-        <div className="timeline-track">
-          <motion.div className="timeline-fill" style={{ height: lineHeight }} />
+      <div className="flight-path">
+        <div className="flight-path-line">
+          <div className="flight-path-progress" />
         </div>
+
         {experiences.map((exp, index) => (
-          <motion.div
-            key={index}
-            className={`timeline-item ${index % 2 === 0 ? 'left' : 'right'}`}
-            initial={{ opacity: 0, x: index % 2 === 0 ? -60 : 60 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-50px' }}
-            transition={{ duration: 0.7, delay: index * 0.15 }}
-          >
-            <div className="timeline-dot" />
-            <div className="timeline-content glass-card">
-              <span className="timeline-duration">{exp.duration}</span>
+          <div key={index} className="waypoint">
+            <div className="waypoint-content">
+              <span className="waypoint-duration">{exp.duration}</span>
               <h3>{exp.role}</h3>
-              <h4>{exp.company} <span className="location">&bull; {exp.location}</span></h4>
-              <div className="timeline-highlights">
+              <h4>
+                {exp.company}
+                <span className="waypoint-location"> · {exp.location}</span>
+              </h4>
+              <div className="waypoint-badges">
                 {exp.highlights.map((h, i) => (
-                  <span key={i} className="timeline-badge">{h}</span>
+                  <span key={i} className="waypoint-badge">{h}</span>
                 ))}
               </div>
             </div>
-          </motion.div>
+            <div className="waypoint-node">
+              <div className="waypoint-dot" />
+              <div className="waypoint-pulse" />
+            </div>
+            <div className="waypoint-spacer" />
+          </div>
         ))}
       </div>
     </section>

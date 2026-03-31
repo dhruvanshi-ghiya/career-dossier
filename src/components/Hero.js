@@ -1,134 +1,162 @@
-import React from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import React, { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const Hero = () => {
-  const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 500], [0, 200]);
-  const opacity = useTransform(scrollY, [0, 400], [1, 0]);
-  const scale = useTransform(scrollY, [0, 400], [1, 0.8]);
+  const sectionRef = useRef(null);
+  const contentRef = useRef(null);
 
-  const nameLetters = "Dhruvanshi Ghiya".split('');
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ delay: 0.2 });
+
+      /* Boot sequence */
+      tl.fromTo('.boot-text',
+        { opacity: 0 },
+        { opacity: 1, duration: 0.3 }
+      )
+      .fromTo('.boot-line', 
+        { opacity: 0, x: -10 },
+        { opacity: 1, x: 0, duration: 0.25, stagger: 0.2, ease: 'power2.out' }
+      )
+      /* Flash */
+      .to('.hero-flash', { opacity: 0.9, duration: 0.06 }, '+=0.5')
+      .to('.hero-flash', { opacity: 0, duration: 0.4, ease: 'power2.out' })
+      /* Boot text fades */
+      .to('.boot-text', { opacity: 0, y: -20, duration: 0.4 }, '-=0.2')
+      /* Name SLAMS in */
+      .fromTo('.hero-name-main',
+        { opacity: 0, scale: 1.2, y: 40 },
+        { opacity: 1, scale: 1, y: 0, duration: 0.9, ease: 'power4.out' },
+        '-=0.1'
+      )
+      /* Title line expands */
+      .fromTo('.hero-title-line',
+        { opacity: 0, scaleX: 0 },
+        { opacity: 1, scaleX: 1, duration: 0.7, ease: 'power3.out' },
+        '-=0.4'
+      )
+      /* Subtitle */
+      .fromTo('.hero-subtitle',
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' },
+        '-=0.2'
+      )
+      /* CTAs */
+      .fromTo('.hero-cta-group',
+        { opacity: 0, y: 15 },
+        { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' },
+        '-=0.2'
+      )
+      /* Scroll prompt */
+      .fromTo('.hero-scroll-prompt',
+        { opacity: 0 },
+        { opacity: 1, duration: 1, ease: 'power2.out' },
+        '-=0.1'
+      );
+
+      /* Scroll-out: content parallaxes away */
+      gsap.to(contentRef.current, {
+        y: -160,
+        opacity: 0,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top top',
+          end: '+=80%',
+          scrub: 0.4,
+        },
+      });
+
+      /* Scroll prompt fades fast */
+      gsap.to('.hero-scroll-prompt', {
+        opacity: 0,
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top top',
+          end: '+=15%',
+          scrub: true,
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  /* Mouse parallax on hero content */
+  useEffect(() => {
+    const content = contentRef.current;
+    if (!content) return;
+    const onMove = (e) => {
+      const cx = (e.clientX / window.innerWidth - 0.5) * 2;
+      const cy = (e.clientY / window.innerHeight - 0.5) * 2;
+      gsap.to(content, { x: cx * 18, y: cy * 12, duration: 1, ease: 'power2.out' });
+    };
+    window.addEventListener('mousemove', onMove);
+    return () => window.removeEventListener('mousemove', onMove);
+  }, []);
 
   return (
-    <motion.section
-      id="hero"
-      className="hero"
-      style={{ y, opacity, scale }}
-    >
-      <div className="hero-content">
-        <motion.div
-          className="hero-greeting"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
-          <span className="greeting-line" />
-          <span>Hello, I'm</span>
-        </motion.div>
+    <section id="hero" className="hero" ref={sectionRef}>
+      {/* Flash overlay */}
+      <div className="hero-flash" />
 
-        <h1 className="hero-name">
-          {nameLetters.map((letter, i) => (
-            <motion.span
-              key={i}
-              className="hero-letter"
-              initial={{ opacity: 0, y: 80, rotateX: -90 }}
-              animate={{ opacity: 1, y: 0, rotateX: 0 }}
-              transition={{
-                duration: 0.8,
-                delay: 0.5 + i * 0.04,
-                ease: [0.6, 0, 0.2, 1],
-              }}
-            >
-              {letter === ' ' ? '\u00A0' : letter}
-            </motion.span>
-          ))}
+      {/* Boot sequence text */}
+      <div className="boot-text">
+        <span className="boot-line">{'>_ INITIALIZING SYSTEMS...'}</span>
+        <span className="boot-line">{'>_ LOADING PORTFOLIO_MATRIX...'}</span>
+        <span className="boot-line boot-ready">{'>_ READY'}</span>
+      </div>
+
+      <div className="hero-content" ref={contentRef}>
+        <h1 className="hero-name-main">
+          <span className="hero-firstname">Dhruvanshi</span>
+          <span className="hero-lastname">Ghiya</span>
         </h1>
 
-        <motion.div
-          className="hero-title"
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1, delay: 1.2, ease: [0.6, 0, 0.2, 1] }}
-        >
-          <span className="title-accent">Software Developer</span>
-          <span className="title-divider">/</span>
-          <span className="title-secondary">Creative Technologist</span>
-        </motion.div>
+        <div className="hero-title-line">
+          <span className="line-accent" />
+          <span className="hero-title-text">Software Developer &amp; Creative Technologist</span>
+          <span className="line-accent" />
+        </div>
 
-        <motion.p
-          className="hero-tagline"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.2, delay: 1.6 }}
-        >
-          Crafting digital experiences with code and creativity
-        </motion.p>
+        <p className="hero-subtitle">
+          Turning curiosity into code, and code into impact.
+        </p>
 
-        <motion.div
-          className="hero-cta"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 2 }}
-        >
+        <div className="hero-cta-group">
           <a
             href="#projects"
-            className="cta-button interactive"
-            onClick={(e) => {
-              e.preventDefault();
-              document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' });
-            }}
+            className="cta-primary interactive"
+            onClick={(e) => { e.preventDefault(); document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' }); }}
           >
-            <span>View My Work</span>
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
+            <span>{'{ Explore Missions }'}</span>
           </a>
-        </motion.div>
-      </div>
-
-      <motion.div
-        className="scroll-indicator"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2.5 }}
-      >
-        <div className="scroll-mouse">
-          <motion.div
-            className="scroll-dot"
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-          />
+          <a
+            href="#contact"
+            className="cta-secondary interactive"
+            onClick={(e) => { e.preventDefault(); document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' }); }}
+          >
+            <span>Open Channel</span>
+          </a>
         </div>
-        <span>Scroll</span>
-      </motion.div>
-
-      <div className="hero-orbs">
-        <motion.div
-          className="orb orb-1"
-          animate={{
-            x: [0, 30, -20, 0],
-            y: [0, -40, 20, 0],
-          }}
-          transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-        />
-        <motion.div
-          className="orb orb-2"
-          animate={{
-            x: [0, -40, 30, 0],
-            y: [0, 20, -30, 0],
-          }}
-          transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
-        />
-        <motion.div
-          className="orb orb-3"
-          animate={{
-            x: [0, 20, -30, 0],
-            y: [0, 30, -20, 0],
-          }}
-          transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
-        />
       </div>
-    </motion.section>
+
+      {/* Scroll prompt — clearly visible */}
+      <div className="hero-scroll-prompt">
+        <div className="scroll-line-track">
+          <div className="scroll-line-fill" />
+        </div>
+        <span className="scroll-prompt-text">SCROLL TO BEGIN MISSION</span>
+        <div className="scroll-arrows">
+          <span className="scroll-arrow" />
+          <span className="scroll-arrow" />
+          <span className="scroll-arrow" />
+        </div>
+      </div>
+    </section>
   );
 };
 

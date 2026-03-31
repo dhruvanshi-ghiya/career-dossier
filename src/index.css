@@ -1,18 +1,26 @@
 :root {
-  --bg-primary: #0a0a0f;
-  --bg-secondary: #12121a;
-  --bg-tertiary: #1a1a2e;
-  --text-primary: #ffffff;
-  --text-secondary: #a0a0b8;
-  --text-muted: #6b6b80;
-  --accent-primary: #6c63ff;
-  --accent-secondary: #00d4ff;
-  --accent-tertiary: #ff6b9d;
-  --accent-yellow: #ffd93d;
-  --glass-bg: rgba(255, 255, 255, 0.03);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-hover: rgba(255, 255, 255, 0.06);
-  --transition-smooth: cubic-bezier(0.6, 0, 0.2, 1);
+  /* Deep space palette */
+  --bg-void: #030014;
+  --bg-deep: #080820;
+  --bg-card: #0c0c24;
+  --bg-elevated: #121230;
+  --text-primary: #e8e8f0;
+  --text-secondary: #8888a8;
+  --text-muted: #444466;
+  /* Narrative accent colors — overridden by JS on scroll */
+  --scene-color: #4fc3f7;
+  --scene-glow: rgba(79, 195, 247, 0.12);
+  /* Static accents */
+  --accent-primary: #4fc3f7;
+  --accent-purple: #7c4dff;
+  --accent-cyan: #00e5ff;
+  --accent-warm: #ff6b6b;
+  --accent-gold: #ffd740;
+  /* Glass */
+  --glass-bg: rgba(255, 255, 255, 0.015);
+  --glass-border: rgba(255, 255, 255, 0.05);
+  /* Easings */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 *, *::before, *::after {
@@ -22,39 +30,44 @@
 }
 
 html {
-  scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background-color: var(--bg-primary);
+  background-color: var(--bg-void);
   color: var(--text-primary);
   line-height: 1.6;
   overflow-x: hidden;
   cursor: none;
 }
 
-a { cursor: none; }
-button { cursor: none; }
+a { cursor: none; text-decoration: none; color: inherit; }
+button { cursor: none; border: none; background: none; font: inherit; }
 
 ::selection {
-  background: var(--accent-primary);
+  background: var(--scene-color);
   color: white;
 }
 
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg-primary);
-}
-
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: var(--accent-primary);
-  border-radius: 3px;
+  background: var(--scene-color);
+  border-radius: 2px;
 }
 
 @media (hover: none) {

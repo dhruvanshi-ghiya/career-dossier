@@ -1,19 +1,17 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 
 const Footer = () => {
   return (
     <footer className="footer">
-      <motion.div
-        className="footer-content"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
-      >
-        <p>Designed & Built by <span className="footer-name">Dhruvanshi Ghiya</span></p>
-        <p className="footer-year">&copy; {new Date().getFullYear()}</p>
-      </motion.div>
+      <div className="footer-content">
+        <div className="footer-line" />
+        <p className="footer-sign-off">{'// END_TRANSMISSION'}</p>
+        <p className="footer-credit">
+          Designed &amp; Engineered by{' '}
+          <span className="footer-name">Dhruvanshi Ghiya</span>
+        </p>
+        <p className="footer-year">&copy; {new Date().getFullYear()} &mdash; All Systems Nominal</p>
+      </div>
     </footer>
   );
 };
